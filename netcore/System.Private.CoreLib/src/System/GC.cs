@@ -247,5 +247,8 @@ namespace System
 			// TODO: Implement
 			return new T [length];
 		}
+
+		[MethodImplAttribute (MethodImplOptions.InternalCall)]
+		internal static extern T[] InternalAllocateUninitializedArray (int length, type T);
 	}
 }

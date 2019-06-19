@@ -22,6 +22,7 @@
 #include <mono/metadata/profiler-private.h>
 #include <mono/metadata/domain-internals.h>
 #include <mono/metadata/class-internals.h>
+#include <mono/metadata/handle.h>
 #include <mono/metadata/metadata-internals.h>
 #include <mono/metadata/mono-mlist.h>
 #include <mono/metadata/threads-types.h>
@@ -546,6 +547,12 @@ void
 ves_icall_System_GC_InternalCollect (int generation)
 {
 	mono_gc_collect (generation);
+}
+
+MonoArrayHandle
+ves_icall_System_GC_InternalAllocateUninitializedArray (MonoObjectHandle type, MonoError *error)
+{
+	return mono_array_new_handle(mono_domain_get(), NULL, 1, error );
 }
 
 gint64
