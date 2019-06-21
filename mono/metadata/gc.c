@@ -21,6 +21,7 @@
 #include <mono/metadata/exception.h>
 #include <mono/metadata/profiler-private.h>
 #include <mono/metadata/domain-internals.h>
+#include <mono/metadata/class-init.h>
 #include <mono/metadata/class-internals.h>
 #include <mono/metadata/handle.h>
 #include <mono/metadata/metadata-internals.h>
@@ -550,9 +551,17 @@ ves_icall_System_GC_InternalCollect (int generation)
 }
 
 MonoArrayHandle
-ves_icall_System_GC_InternalAllocateUninitializedArray (MonoObjectHandle type, MonoError *error)
+ves_icall_System_GC_InternalAllocateUninitializedArray (MonoReflectionTypeHandle type, gint32 length, MonoError *error)
 {
-	return mono_array_new_handle(mono_domain_get(), NULL, 1, error );
+	MonoClass *eklass = mono_class_from_mono_type_internal (MONO_HANDLE_GETVAL (type, type));
+
+	MonoClass * const aklass =  mono_class_create_bounded_array (eklass, 1, TRUE);
+
+	uintptr_t const aklass_rank = m_class_get_rank (aklass);
+	uintptr_t * const sizes = g_newa (uintptr_t, aklass_rank);
+	intptr_t * const lower_bounds = g_newa (intptr_t, aklass_rank);
+
+	return mono_array_new_full_handle (MONO_HANDLE_DOMAIN (type), aklass, sizes, lower_bounds, error);
 }
 
 gint64

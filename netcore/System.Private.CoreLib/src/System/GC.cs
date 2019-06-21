@@ -242,9 +242,10 @@ namespace System
 			return default;
 		}
 
-		internal static T[] AllocateUninitializedArray<T> (int length)
+		public static T[] AllocateUninitializedArray<T> (int length)
 		{
 			// TODO: Implement
+			typeof(T); 
 			return new T [length];
 		}
 
