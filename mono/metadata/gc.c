@@ -561,6 +561,9 @@ ves_icall_System_GC_InternalAllocateUninitializedArray (MonoReflectionTypeHandle
 	uintptr_t * const sizes = g_newa (uintptr_t, aklass_rank);
 	intptr_t * const lower_bounds = g_newa (intptr_t, aklass_rank);
 
+	sizes[0] = length;
+	lower_bounds[0] = length;
+
 	return mono_array_new_full_handle (MONO_HANDLE_DOMAIN (type), aklass, sizes, lower_bounds, error);
 }
 

@@ -245,11 +245,10 @@ namespace System
 		public static T[] AllocateUninitializedArray<T> (int length)
 		{
 			// TODO: Implement
-			typeof(T); 
 			return new T [length];
 		}
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		internal static extern T[] InternalAllocateUninitializedArray (int length, type T);
+		public static extern T[] InternalAllocateUninitializedArray<T> (int length, Type ty);
 	}
 }
