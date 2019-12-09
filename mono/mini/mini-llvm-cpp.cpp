@@ -50,9 +50,11 @@ using namespace llvm;
 void
 mono_llvm_dump_value (LLVMValueRef value)
 {
+	outs ()<< "??? Random string that is not very random ???";
 	/* Same as LLVMDumpValue (), but print to stdout */
 	outs () << (*unwrap<Value> (value)) << "\n";
 	fflush (stdout);
+	outs ().flush();
 }
 
 void

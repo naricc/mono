@@ -5011,6 +5011,9 @@ process_bb (EmitContext *ctx, MonoBasicBlock *bb)
 						}
 					}
 				}
+
+				printf("!!! RetVal: %x \n", 1);
+				mono_llvm_dump_value(retval);
 				LLVMBuildRet (builder, retval);
 				break;
 			}
@@ -5021,6 +5024,8 @@ process_bb (EmitContext *ctx, MonoBasicBlock *bb)
 				g_assert (addresses [ins->sreg1]);
 
 				retval = LLVMBuildLoad (builder, LLVMBuildBitCast (builder, addresses [ins->sreg1], LLVMPointerType (ret_type, 0), ""), "");
+
+				printf("!!! RetVal: %x \n", 2);
 				LLVMBuildRet (builder, retval);
 				break;
 			}
@@ -5029,6 +5034,8 @@ process_bb (EmitContext *ctx, MonoBasicBlock *bb)
 
 				g_assert (addresses [ins->sreg1]);
 				retval = LLVMBuildLoad (builder, addresses [ins->sreg1], "");
+
+				printf("!!! RetVal: %x \n", 3);
 				LLVMBuildRet (builder, retval);
 				break;
 			}
@@ -5069,6 +5076,8 @@ process_bb (EmitContext *ctx, MonoBasicBlock *bb)
 
 				g_assert (addresses [ins->sreg1]);
 				retval = LLVMBuildLoad (builder, convert (ctx, addresses [ins->sreg1], LLVMPointerType (ret_type, 0)), "");
+
+				printf("!!! RetVal: %x \n", 4);
 				LLVMBuildRet (builder, retval);
 				break;
 			}
@@ -5081,9 +5090,12 @@ process_bb (EmitContext *ctx, MonoBasicBlock *bb)
 					 */
 					if (cfg->vret_addr)
 						LLVMBuildRetVoid (builder);
-					else
+					else {
+						printf("!!! RetVal: %x \n", 5);
 						LLVMBuildRet (builder, LLVMConstNull (type_to_llvm_type (ctx, sig->ret)));
+					}
 				} else {
+					printf("!!! RetVal: %x \n", 6);
 					LLVMBuildRet (builder, convert (ctx, lhs, type_to_llvm_type (ctx, sig->ret)));
 				}
 				has_terminator = TRUE;
