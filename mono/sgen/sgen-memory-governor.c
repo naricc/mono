@@ -391,7 +391,7 @@ sgen_assert_memory_alloc (void *ptr, size_t requested_size, const char *assert_d
 {
 	if (ptr || !assert_description)
 		return;
-	fprintf (stderr, "Error: Garbage collector could not allocate %" G_GSIZE_FORMAT "u bytes of memory for %s.\n", requested_size, assert_description);
+	fprintf (stderr, "Error: Garbage collector could not allocate %zu bytes of memory for %s.\n", requested_size, assert_description);
 	exit (1);
 }
 
@@ -501,10 +501,10 @@ sgen_memgov_init (size_t max_heap, size_t soft_limit, gboolean debug_allowance, 
 	sgen_register_fixed_internal_mem_type (INTERNAL_MEM_LOG_ENTRY, sizeof (SgenLogEntry));
 
 	if (max_heap == 0) {
-		sgen_gc_info.total_available_memory_bytes = mono_determine_physical_ram_size ();
+		sgen_gc_info.total_available_memory_bytes = mono_determine_physical_ram_available_size ();
 
 		if (!sgen_gc_info.total_available_memory_bytes){
-			SGEN_LOG(9, "Warning: Unable to determine physical ram size for GCMemoryInfo");
+			SGEN_LOG(9, "Warning: Unable to determine physical ram size available for GCMemoryInfo");
 		}
 
 		return;
@@ -519,7 +519,7 @@ sgen_memgov_init (size_t max_heap, size_t soft_limit, gboolean debug_allowance, 
 		sgen_env_var_error (MONO_GC_PARAMS_NAME, "Setting to minimum.", "`max-heap-size` must be at least 4 times as large as `nursery size`.");
 		max_heap = SGEN_DEFAULT_NURSERY_SIZE * 4;
 	}
-	max_heap_size = max_heap;
+	max_heap_size = max_heap - SGEN_DEFAULT_NURSERY_SIZE;
 
 	sgen_gc_info.total_available_memory_bytes = max_heap;
 
